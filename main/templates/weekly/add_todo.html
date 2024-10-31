@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">주간 할일 추가</h2>
+
+    <form method="post" class="mx-auto" style="max-width: 400px;">
+        {{ form.csrf_token() }}
+
+        <!-- 요일 선택 -->
+        <div class="mb-3">
+            <label class="form-label">요일 선택</label>
+            <div class="btn-group d-flex" role="group">
+                {% for value, label in form.day.choices %}
+                    <input type="radio" class="btn-check" id="day_{{ value }}"
+                           name="{{ form.day.name }}" value="{{ value }}" required>
+                    <label class="btn btn-outline-primary flex-fill" for="day_{{ value }}">
+                        {{ label }}
+                    </label>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- 내용 입력 -->
+        <div class="mb-3">
+            <label for="content" class="form-label">{{ form.content.label }}</label>
+            {{ form.content(class="form-control", id="content", rows="4", placeholder="할 일을 입력하세요") }}
+        </div>
+
+        <!-- 하이라이트 선택 -->
+        <div class="mb-3">
+            <label class="form-label">하이라이트 여부</label>
+            <div class="btn-group d-flex" role="group">
+                {% for value, label in form.highlight.choices %}
+                    <input type="radio" class="btn-check" id="highlight_{{ value }}"
+                           name="{{ form.highlight.name }}" value="{{ value }}" required>
+                    <label class="btn btn-outline-success flex-fill" for="highlight_{{ value }}">
+                        {{ label }}
+                    </label>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- 저장하기 버튼 -->
+        <div class="d-grid">
+            <button type="submit" class="btn btn-primary btn-sm">저장하기</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

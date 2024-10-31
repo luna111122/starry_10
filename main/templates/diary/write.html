@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container my-5 px-4">  <!-- 상하 간격을 줄이고 양쪽 패딩 조정 -->
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <form method="post" class="my-2">
+                {{ form.csrf_token() }}
+
+                <!-- 제목 입력 -->
+                <div class="mb-3">
+                    <label for="title" class="form-label">{{ form.title.label }}</label>
+                    {{ form.title(class="form-control", id="title", placeholder="제목을 입력하세요") }}
+                </div>
+
+                <!-- 내용 입력 -->
+                <div class="mb-3">
+                    <label for="content" class="form-label">{{ form.content.label }}</label>
+                    {{ form.content(class="form-control", id="content", rows="4", placeholder="내용을 입력하세요") }}
+                </div>
+
+                <!-- 감정 선택 -->
+                <div class="row mb-3">
+                    <label class="form-label">감정 선택</label>
+                    <div class="btn-group d-flex" role="group">
+                        {% for value, label in form.emotion.choices %}
+                        <input type="radio" class="btn-check" id="emotion_{{ value }}"
+                               name="{{ form.emotion.name }}" value="{{ value }}" required>
+                        <label class="btn btn-outline-primary flex-fill" for="emotion_{{ value }}">
+                            {{ label }}
+                        </label>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- 방해 요소 선택 -->
+                <div class="row mb-3">
+                    <label class="form-label">방해 요소 선택</label>
+                    <div class="btn-group d-flex" role="group">
+                        {% for value, label in form.distract.choices %}
+                        <input type="radio" class="btn-check" id="distract_{{ value }}"
+                               name="{{ form.distract.name }}" value="{{ value }}" required>
+                        <label class="btn btn-outline-danger flex-fill" for="distract_{{ value }}">
+                            {{ label }}
+                        </label>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- 일정 성공 여부 -->
+                <div class="row mb-3">
+                    <label class="form-label">일정 성공 여부</label>
+                    <div class="btn-group d-flex" role="group">
+                        {% for value, label in form.todo.choices %}
+                        <input type="radio" class="btn-check" id="todo_{{ value }}"
+                               name="{{ form.todo.name }}" value="{{ value }}" required>
+                        <label class="btn btn-outline-success flex-fill" for="todo_{{ value }}">
+                            {{ label }}
+                        </label>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- 저장하기 버튼 -->
+                <div class="d-grid mb-3">
+                    <button type="submit" class="btn btn-primary btn-sm">저장하기</button>
+                </div>
+
+                <!-- 뒤로가기 링크 -->
+                <div class="d-grid">
+                    <a href="#" class="btn btn-outline-secondary btn-sm">뒤로가기</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container-fluid d-flex flex-column justify-content-center align-items-center vh-100">
+    <h2 class="text-center mb-3">분석 결과</h2>
+
+    <!-- 가장 많이 나온 감정 출력 -->
+    <div class="alert alert-info text-center" role="alert">
+        가장 많이 나온 감정 태그는 <strong>{{ max_emotion['감정'] }}</strong>입니다!
+    </div>
+
+    <h3 class="text-center my-2">방해 요소 분석</h3>
+
+    <!-- 그래프 영역 -->
+    <div class="d-flex justify-content-center mb-3" style="max-width: 300px;">
+        <canvas id="distractionChart"></canvas>
+    </div>
+
+    <!-- 데이터 표시 -->
+    <div class="text-center">
+        <p>스마트폰: {{ smartphone }}개</p>
+        <p>일정: {{ schedule }}개</p>
+        <p>피로: {{ fatigue }}개</p>
+        <p>기타: {{ etc }}개</p>
+    </div>
+
+</div>
+
+<!-- Chart.js & datalabels 플러그인 CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+
+<!-- 그래프 스크립트 -->
+<script>
+    const ctx = document.getElementById('distractionChart').getContext('2d');
+
+    const data = {
+        labels: ['스마트폰', '일정', '피로', '기타'],
+        datasets: [{
+            label: '방해 요소',
+            data: [{{ smartphone }}, {{ schedule }}, {{ fatigue }}, {{ etc }}],
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.6)',
+                'rgba(54, 162, 235, 0.6)',
+                'rgba(255, 206, 86, 0.6)',
+                'rgba(75, 192, 192, 0.6)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)'
+            ],
+            borderWidth: 1
+        }]
+    };
+
+    const config = {
+        type: 'pie',
+        data: data,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,  // 그래프 비율 유지 X
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(tooltipItem) {
+                            let label = tooltipItem.label || '';
+                            let value = tooltipItem.raw || 0;
+                            return `${label}: ${value}개`;
+                        }
+                    }
+                },
+                datalabels: {
+                    color: '#fff',
+                    formatter: (value, ctx) => {
+                        let label = ctx.chart.data.labels[ctx.dataIndex];
+                        return `${label}\n${value}개`;
+                    },
+                    font: {
+                        weight: 'bold',
+                        size: 12,
+                    }
+                }
+            }
+        },
+        plugins: [ChartDataLabels]
+    };
+
+    const distractionChart = new Chart(ctx, config);
+</script>
+
+{% endblock %}

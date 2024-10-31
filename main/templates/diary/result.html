@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container my-5">
+    <h2 class="text-center mb-4">일기 작성 결과</h2>
+
+    <div class="card shadow">
+        <div class="card-body">
+            <h4 class="card-title">제목: {{ form.title.data }}</h4>
+            <p class="card-text"><strong>내용:</strong> {{ form.content.data }}</p>
+
+            <div class="mb-2">
+                <span class="badge bg-primary">감정: {{ form.emotion.data }}</span>
+            </div>
+            <div class="mb-2">
+                <span class="badge bg-danger">방해 요소: {{ form.distract.data }}</span>
+            </div>
+            <div class="mb-2">
+                <span class="badge bg-danger">일정 성공 여부: {{ form.todo.data }}</span>
+            </div>
+            <div class="mb-2">
+                <span class="badge bg-danger"><a href="{{ url_for('diary.advice') }}">starry의 조언 듣기</a> </span>
+            </div>
+
+
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

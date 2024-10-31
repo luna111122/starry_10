@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm mb-4">
+                <div class="card-body text-center">
+                    <h4 class="card-title mb-3">다이어리 쓰기</h4>
+                    <p class="card-text">오늘의 생각과 일상을 기록해보세요.</p>
+                    <a href="{{ url_for('diary.write') }}" class="btn btn-primary btn-lg w-100 mb-2">
+                        다이어리 쓰기
+                    </a>
+                </div>
+            </div>
+
+            <div class="card shadow-sm mb-4">
+                <div class="card-body text-center">
+                    <h4 class="card-title mb-3">성과도 확인</h4>
+                    <p class="card-text">이번 주의 성과를 확인해보세요.</p>
+                    <a href="{{ url_for('main.result') }}" class="btn btn-success btn-lg w-100 mb-2">
+                        성과도 보기
+                    </a>
+                </div>
+            </div>
+
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    <h4 class="card-title mb-3">목표 입력하기</h4>
+                    <p class="card-text">이번 주 목표를 설정하고 도전해보세요.</p>
+                    <a href="{{ url_for('main.goalling') }}" class="btn btn-warning btn-lg w-100">
+                        목표 입력하기
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mt-5">
+        <h2 class="text-center mb-4">이번 주 하이라이트</h2>
+        <ul class="list-group">
+            {% for day, items in highlights.items() %}
+                {% if items %}
+                    {% for item in items %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span>{{ item.content }}</span>
+                            <span class="badge bg-info">{{ day|capitalize }}</span>
+                        </li>
+                    {% endfor %}
+                {% endif %}
+            {% endfor %}
+        </ul>
+
+        <h2 class="text-center mt-5 mb-4">이번 주 목표</h2>
+        <ul class="list-group">
+            {% for goal in goalls %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <strong>내용:</strong> {{ goal.content }} <br>
+                        <strong>요일:</strong> {{ goal.day }}
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4 text-primary fw-bold">Weekly Todo Calendar</h2>
+
+    <!-- 요일 헤더 -->
+    <div class="row text-center fw-bold border-bottom py-2 bg-light">
+        <div class="col">월요일</div>
+        <div class="col">화요일</div>
+        <div class="col">수요일</div>
+        <div class="col">목요일</div>
+        <div class="col">금요일</div>
+    </div>
+
+    <!-- 각 요일의 할 일 목록 -->
+    <div class="row g-3">
+        {% for day, tasks in {'monday': monday, 'tuesday': tuesday, 'wednesday': wednesday,
+                              'thursday': thursday, 'friday': friday}.items() %}
+        <div class="col border p-3 bg-white shadow-sm rounded">
+            <ul class="list-group list-group-flush">
+                {% for task in tasks %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span class="fw-bold">{{ task.content }}</span>
+                    <div class="btn-group">
+                        <button data-day="{{ day }}" data-id="{{ task.id }}" data-status="O"
+                                class="btn {% if task.todo == 'O' %}btn-success{% else %}btn-outline-success{% endif %} btn-sm status-btn">
+                            O
+                        </button>
+                        <button data-day="{{ day }}" data-id="{{ task.id }}" data-status="X"
+                                class="btn {% if task.todo == 'X' %}btn-danger{% else %}btn-outline-danger{% endif %} btn-sm status-btn">
+                            X
+                        </button>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="text-center mt-4">
+        <a href="{{ url_for('weekly.write') }}" class="btn btn-primary btn-lg px-5">
+            <i class="bi bi-plus-circle"></i> 추가하기
+        </a>
+    </div>
+</div>
+
+<!-- JavaScript로 AJAX 요청 처리 -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const statusButtons = document.querySelectorAll('.status-btn');
+
+        statusButtons.forEach(button => {
+            button.addEventListener('click', function (event) {
+                event.preventDefault();  // 새로고침 방지
+                const day = this.dataset.day;
+                const itemId = this.dataset.id;
+                const status = this.dataset.status;
+
+                fetch(`/weekly/update_status/${day}/${itemId}/${status}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ form.csrf_token._value() }}'
+                    }
+                })
+                .then(response => {
+                    if (response.ok) {
+                        // 버튼 색상 및 상태 업데이트
+                        if (status === 'O') {
+                            this.classList.remove('btn-outline-success');
+                            this.classList.add('btn-success');
+                            this.nextElementSibling.classList.remove('btn-danger');
+                            this.nextElementSibling.classList.add('btn-outline-danger');
+                        } else if (status === 'X') {
+                            this.classList.remove('btn-outline-danger');
+                            this.classList.add('btn-danger');
+                            this.previousElementSibling.classList.remove('btn-success');
+                            this.previousElementSibling.classList.add('btn-outline-success');
+                        }
+                    } else {
+                        console.error('Failed to update status');
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            });
+        });
+    });
+</script>
+{% endblock %}

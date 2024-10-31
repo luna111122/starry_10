@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4 text-primary fw-bold">Goal Setting</h2>
+
+    <form method="post" class="mx-auto" style="max-width: 500px;">
+        {{ form.csrf_token() }}
+
+        <!-- 내용 입력 -->
+        <div class="mb-3">
+    <label for="content" class="form-label">{{ form.content.label }}</label>
+    <input type="text"
+           class="form-control"
+           id="content"
+           name="{{ form.content.name }}"
+           placeholder="목표를 입력하세요"
+           required>
+</div>
+
+<!-- 요일 입력 -->
+<div class="mb-3">
+    <label for="day" class="form-label">{{ form.day.label }}</label>
+    <input type="text"
+           class="form-control"
+           id="day"
+           name="{{ form.day.name }}"
+           placeholder="요일을 입력하세요 (예: 월요일)"
+           required>
+</div>
+
+
+        <!-- 제출 버튼 -->
+        <div class="d-grid mt-4">
+            <button type="submit" class="btn btn-primary">저장하기</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
